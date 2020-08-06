@@ -4,6 +4,8 @@ const port = 3000;
 const fs = require('fs');
 const path = require('path');
 
+let data = {};
+
 app.use(express.static('public'));
 
 app.listen(port, () => {
@@ -14,34 +16,13 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname + '/index.html'));
 });
 
-let data = {
-    members: [
-        {
-            id: 1,
-            name: 'Pranshu',
-            probability: 1,
-            karma: 0
-        },
-        {
-            id: 2,
-            name: 'Prasad',
-            probability: 1,
-            karma: 0
-        },
-        {
-            id: 3,
-            name: 'Madhu',
-            probability: 1,
-            karma: 0
-        },
-        {
-            id: 4,
-            name: 'Sam',
-            probability: 1,
-            karma: 0
-        }
-    ]
-};
+fs.readFile('./member_states.json', 'utf8', (err, jsonString) => {
+    if (err) {
+        console.log("Member state file read failed:", err)
+        return
+    }
+    data = JSON.parse(jsonString);
+})
 
 /*
 -- Validation -- 
@@ -84,6 +65,17 @@ app.get('/reinitialize', (req, res) => {
 
 app.get('/get_members', (req, res) => {
     res.send(data.members);
+});
+
+
+app.get('/save', (req, res) => {
+    fs.writeFile('member_states.json', JSON.stringify(data), function(err) {
+        if (err) {
+            return console.log.err('Not able to save data to file');
+        }
+        console.log('Data saved to file successfully')
+    });
+    res.sendStatus(200);
 });
 
 

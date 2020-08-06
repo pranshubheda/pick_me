@@ -94,6 +94,23 @@ function populate_table() {
     table_body.innerHTML = member_data_inner_html;
 }
 
+function save() {
+    fetch('/save')
+    .then(response => {
+        console.log(response);
+        if(response.ok && response.status == 200) {
+            console.log("TEST")
+            save_alert();
+        }
+        else {
+            throw new Error('Request failed.');
+        }
+    })
+    .catch(error => {
+        console.error('Not able to save file successfully.');
+    })    
+}
+
 function init() {
     //make api call to fetch members, populate members variable
     get_members();
@@ -128,6 +145,10 @@ let reinitialize_alert = function(message) {
     $('#reinitialize_div').html('<div class="alert alert-primary"><a class="close" data-dismiss="alert" id="reinitialize_close">×</a><span>No new members left. Reinitialize probabilities.</span></div>');
 }
 
+let save_alert = function(message) {
+    $('#save_alert_div').html('<div class="alert alert-success"><a class="close" data-dismiss="alert" id="save_alert_close">×</a><span>Member states saved!</span></div>');
+}
+
 let create_roulette = function(member_index) {
     var option = {
         speed : 10,
@@ -146,5 +167,21 @@ let create_roulette = function(member_index) {
     $('div.roulette').roulette('option', option);	
     $('div.roulette').roulette('start');
 }
+
+var option = {
+    speed : 10,
+    duration : 3,
+    stopImageNumber : 0,
+    startCallback : function() {
+        // console.log('start');
+    },
+    slowDownCallback : function() {
+        // console.log('slowDown');
+    },
+    stopCallback : function($stopElm) {
+        // console.log('stop');
+    }
+};
+$('div.roulette').roulette(option);	
 	
 get_members();
