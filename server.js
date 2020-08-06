@@ -7,7 +7,7 @@ const path = require('path');
 app.use(express.static('public'));
 
 app.listen(port, () => {
-    console.log('Pick Me Server listening at http://localhost:${port}');
+    console.log(`Pick Me Server listening at http://localhost:${port}`);
 });
 
 app.get('/', (req, res) => {
@@ -53,9 +53,22 @@ Adjust the probability of winner.
 Write the results to file.
 */
 app.get('/run_pick_me', (req, res) => {
-    n = data.members.length
-    picked_index = Math.floor(Math.random() * n);
-    res.send(data.members[picked_index]);
+    avaialble_members = find_available_memebers();
+    if (avaialble_members.length > 0) {
+        n = avaialble_members.length;
+        picked_index = Math.floor(Math.random() * n);
+        member_id_selected = avaialble_members[picked_index];
+        member_index = member_id_selected - 1;
+        res.send(data.members[member_index]);
+    }
+});
+
+app.get('/finalize_pick/:pick', (req, res) => {
+    member_id = req.params.pick;
+    member_index = member_id_selected - 1;
+    console.log(member_id);
+    data.members[member_index].probability = 0;
+    res.sendStatus(200);
 });
 
 app.get('/get_members', (req, res) => {
@@ -95,4 +108,15 @@ of the team members. A fresh start.
 */
 function initialize_probabilities() {
     //pass
+}
+
+
+function find_available_memebers() {
+    available_members = [];
+    data.members.forEach(member => {
+        if (member.probability > 0) {
+            available_members.push(member.id);
+        }
+    });
+    return available_members;
 }

@@ -23,6 +23,10 @@
 				</table>
 			</div>
 			<button class='btn btn-large btn-primary start' onclick='run_pick_me()'> START </button> 
+			<button class='btn btn-large btn-primary start' onclick='finalize_pick()' style='display:none' id="finalize"> FINALIZE PICK </button> 
+			<div id="pick_confirmed" class="alert alert-success" role="alert" style='display:none'>
+				Pick confirmed!
+			</div>
 			<p class='h4' id='picked_member_display'></p>
 			<!-- <div class='roulette' style='display:none;'> 
 				<img src='https://picsum.photos/id/101/300/300'/>
