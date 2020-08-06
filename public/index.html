@@ -24,9 +24,13 @@
 			</div>
 			<button class='btn btn-large btn-primary start' onclick='run_pick_me()'> START </button> 
 			<button class='btn btn-large btn-primary start' onclick='finalize_pick()' style='display:none' id="finalize"> FINALIZE PICK </button> 
-			<div id="pick_confirmed" class="alert alert-success" role="alert" style='display:none'>
+			<div id="alert_div"></div>
+			<!-- <div class="alert alert-success" role="alert" style='display:none' id="pick_confirmed">
 				Pick confirmed!
-			</div>
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div> -->
 			<p class='h4' id='picked_member_display'></p>
 			<!-- <div class='roulette' style='display:none;'> 
 				<img src='https://picsum.photos/id/101/300/300'/>

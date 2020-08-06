@@ -20,25 +20,25 @@ let data = {
             id: 1,
             name: 'Pranshu',
             probability: 1,
-            karma: 100
+            karma: 0
         },
         {
             id: 2,
             name: 'Prasad',
             probability: 1,
-            karma: 100
+            karma: 0
         },
         {
             id: 3,
             name: 'Madhu',
             probability: 1,
-            karma: 100
+            karma: 0
         },
         {
             id: 4,
             name: 'Sam',
             probability: 1,
-            karma: 100
+            karma: 0
         }
     ]
 };
@@ -61,13 +61,17 @@ app.get('/run_pick_me', (req, res) => {
         member_index = member_id_selected - 1;
         res.send(data.members[member_index]);
     }
+    else {
+        res.sendStatus(368);
+    }
 });
 
 app.get('/finalize_pick/:pick', (req, res) => {
     member_id = req.params.pick;
     member_index = member_id_selected - 1;
-    console.log(member_id);
+    // console.log(member_id);
     data.members[member_index].probability = 0;
+    data.members[member_index].karma += 100;
     res.sendStatus(200);
 });
 
