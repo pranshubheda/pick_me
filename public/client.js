@@ -123,8 +123,8 @@ $('#alert_div').on('close.bs.alert', function () {
 });
 
 function on_close_confirmation_alert() {
-    document.getElementById('picked_member_display').innerText = '';
-    document.getElementById('picked_member_display').style.display = 'none';
+    // document.getElementById('picked_member_display').innerText = '';
+    // document.getElementById('picked_member_display').style.display = 'none';
     document.getElementById('finalize').style.display = 'none';
 }
 
