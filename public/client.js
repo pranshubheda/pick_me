@@ -18,8 +18,8 @@ function run_pick_me() {
             picked_member_index = picked_member_id-1;
             // console.log(picked_member_index);
             create_roulette(picked_member_index);
-            document.getElementById('picked_member_display').innerText = data.name;
-            document.getElementById('picked_member_display').style.display = '';
+            // document.getElementById('picked_member_display').innerText = data.name;
+            // document.getElementById('picked_member_display').style.display = '';
             document.getElementById('finalize').style.display = '';
         })
         .catch(error => {
@@ -123,8 +123,8 @@ $('#alert_div').on('close.bs.alert', function () {
 });
 
 function on_close_confirmation_alert() {
-    // document.getElementById('picked_member_display').innerText = '';
-    // document.getElementById('picked_member_display').style.display = 'none';
+    document.getElementById('picked_member_display').innerText = '';
+    document.getElementById('picked_member_display').style.display = 'none';
     document.getElementById('finalize').style.display = 'none';
 }
 
