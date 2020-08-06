@@ -1,0 +1,14 @@
+div.roulette {
+	margin-top: 35px;
+}
+div.roulette-inner {
+	left : 33px;
+}
+
+div.roulette_container {
+	background-color:rgb(253, 252, 253);
+	width:200px;
+	height:200px;
+	border:1px solid rgba(253, 252, 253, 0.31);
+	box-shadow:0px 0px 3px lightpink;margin:auto;
+}

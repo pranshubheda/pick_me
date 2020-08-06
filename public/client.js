@@ -7,7 +7,8 @@ function run_pick_me() {
             throw new Error('Request failed.');
         })
         .then(data => {
-            document.getElementById('test').innerHTML = JSON.stringify(data);
+            console.log(data);
+            document.getElementById('picked_member_display').innerText = data.name;
         })
         .catch(error => {
             console.error('Unsuccessful response');
@@ -32,11 +33,14 @@ function init() {
     //make api call to fetch members, populate members variable
     get_members();
     //populate table
+    let member_data_inner_html = '';
+    let table_body = document.getElementById('table_body');
     for (let i = 0; i < members.length; i++) {
         const member = members[i];
         let insert_row_string = `<tr><th scope=\'row\'>${member.id}</th><td>${member.name}</td><td>${member.probability}</td><td>${member.karma}</td></tr>`;
-        console.log(insert_row_string);
+        member_data_inner_html += insert_row_string;
     }
+    table_body.innerHTML = member_data_inner_html;
 }
 
 init();
