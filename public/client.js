@@ -32,10 +32,10 @@ function finalize_pick() {
         .then(response => {
             if(response.ok) {
                 get_members();  
-                document.getElementById('picked_member_display').style.color = 'green';
+                // document.getElementById('picked_member_display').style.color = 'green';
                 confirmation_alert();
                 setTimeout(() => {
-                    document.getElementById("pick_confirmed_close").click();
+                    // document.getElementById("pick_confirmed_close").click();
                 }, 3000);
             }
             else {
@@ -123,8 +123,8 @@ $('#alert_div').on('close.bs.alert', function () {
 });
 
 function on_close_confirmation_alert() {
-    document.getElementById('picked_member_display').innerText = '';
-    document.getElementById('picked_member_display').style.display = 'none';
+    // document.getElementById('picked_member_display').innerText = '';
+    // document.getElementById('picked_member_display').style.display = 'none';
     document.getElementById('finalize').style.display = 'none';
 }
 
