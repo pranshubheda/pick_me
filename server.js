@@ -75,6 +75,13 @@ app.get('/finalize_pick/:pick', (req, res) => {
     res.sendStatus(200);
 });
 
+app.get('/reinitialize', (req, res) => {
+    data.members.forEach(member => {
+        member.probability = 1;
+    });
+    res.sendStatus(200);
+});
+
 app.get('/get_members', (req, res) => {
     res.send(data.members);
 });

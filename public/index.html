@@ -24,20 +24,17 @@
 			</div>
 			<button class='btn btn-large btn-primary start' onclick='run_pick_me()'> START </button> 
 			<button class='btn btn-large btn-primary start' onclick='finalize_pick()' style='display:none' id="finalize"> FINALIZE PICK </button> 
+			<button class='btn btn-large btn-primary start' onclick='reinitialize()' style='display:none' id="reinitialize"> REINITIALIZE </button> 
+
 			<div id="alert_div"></div>
-			<!-- <div class="alert alert-success" role="alert" style='display:none' id="pick_confirmed">
-				Pick confirmed!
-				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-			</div> -->
+			<div id="reinitialize_div"></div>
 			<p class='h4' id='picked_member_display'></p>
-			<!-- <div class='roulette' style='display:none;'> 
+			<div class='roulette' style='display:none;'> 
 				<img src='https://picsum.photos/id/101/300/300'/>
 				<img src='https://picsum.photos/id/102/300/300'/>
 				<img src='https://picsum.photos/id/103/300/300'/>
 				<img src='https://picsum.photos/id/104/300/300'/>
-			</div> -->
+			</div>
 		</div>
 		<script src='jquery-3.5.1.min.js'></script>
 		<script src='bootstrap.min.js'></script>
