@@ -3,50 +3,50 @@
       {
         "id": 1,
         "name": "Madhu",
-        "probability": 0,
+        "probability": 1,
         "karma": 100
       },
       {
         "id": 2,
         "name": "Prasad",
-        "probability": 0,
+        "probability": 1,
         "karma": 100
       },
       {
         "id": 3,
         "name": "Sam",
-        "probability": 0,
+        "probability": 1,
         "karma": 100
       },
       {
         "id": 4,
         "name": "Amit",
-        "probability": 0,
+        "probability": 1,
         "karma": 100
       },
       {
         "id": 5,
         "name": "Xin",
-        "probability": 0,
+        "probability": 1,
         "karma": 100
       },
       {
         "id": 6,
         "name": "Sang",
-        "probability": 0,
+        "probability": 1,
         "karma": 100
       },
       {
         "id": 7,
         "name": "Harsha",
-        "probability": 0,
+        "probability": 1,
         "karma": 100
       },
       {
         "id": 8,
         "name": "Pranshu",
         "probability": 1,
-        "karma": 0
+        "karma": 100
       }
     ]
   }
