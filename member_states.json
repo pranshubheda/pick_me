@@ -27,8 +27,8 @@
       {
         "id": 5,
         "name": "Xin",
-        "probability": 1,
-        "karma": 100
+        "probability": 0,
+        "karma": 200
       },
       {
         "id": 6,
