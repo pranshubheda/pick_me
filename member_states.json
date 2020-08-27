@@ -15,8 +15,8 @@
       {
         "id": 3,
         "name": "Sam",
-        "probability": 1,
-        "karma": 100
+        "probability": 0,
+        "karma": 200
       },
       {
         "id": 4,
