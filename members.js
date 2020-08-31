@@ -1,6 +1,5 @@
 const { query } = require('express');
 const uri = process.env.MONGOLAB_URI;
-const uri = "mongodb+srv://prans:wL5nrbjiRO2YPELD@cluster0.c5ms9.mongodb.net/pick_me?retryWrites=true&w=majority";
 const MongoClient = require('mongodb').MongoClient;
 const client = new MongoClient(uri, { useNewUrlParser: true });
 
