@@ -5,6 +5,7 @@
 		<link rel='stylesheet' href='bootstrap.min.css'>
 		<link rel='stylesheet' href='bootstrap-theme.min.css'>
 		<link rel='stylesheet' href='roulette.css'>
+		<link rel='stylesheet' href='wheel.css'>
 	</head>
 	<body onload='init()'>
 		<div class='container'>
@@ -24,16 +25,16 @@
 					</tbody>
 				</table>
 			</div>
-			<button class='btn btn-large btn-primary start' onclick='run_pick_me()'> START </button> 
+			<!-- <button class='btn btn-large btn-primary start' onclick='run_pick_me()'> START </button>  -->
 			<button class='btn btn-large btn-primary start' onclick='finalize_pick()' style='display:none' id="finalize"> FINALIZE PICK </button> 
-			<button class='btn btn-large btn-primary start' onclick='reinitialize()' style='display:none' id="reinitialize"> REINITIALIZE </button> 
-			<button class='btn btn-large btn-primary start' onclick='save()' id="reinitialize" style="float: right;"> SAVE </button> 
-			<div id="save_alert_div"></div>
+			<button class='btn btn-large btn-primary start' onclick='reinitialize()' style='float: right;' id="reinitialize"> REINITIALIZE </button> 
+			<!-- <button class='btn btn-large btn-primary start' onclick='save()' id="reinitialize" style="float: right;"> SAVE </button>  -->
+			<div id="save_alert_div" style="padding-top: 10;"></div>
 			<div id="alert_div"></div>
 			<div id="reinitialize_div"></div>
 			<!-- <p class='h4' id='picked_member_display'></p> -->
 
-			<div class='roulette' style='display:none;'> 
+			<!-- <div class='roulette' style='display:none;'> 
 				<img src='name_tags_resized/madhu.jpg'class="responsive"/>
 				<img src='name_tags_resized/prasad.jpg'class="responsive"/>
 				<img src='name_tags_resized/sam.jpg'class="responsive"/>
@@ -42,8 +43,15 @@
 				<img src='name_tags_resized/sang.jpg'class="responsive"/>
 				<img src='name_tags_resized/harsha.jpg'class="responsive"/>
 				<img src='name_tags_resized/pranshu.jpg'class="responsive"/>
+			</div> -->
+			<div id="wheel">
+				<div id="chart"></div>
+				<div id="question"><h1></h1></div>
 			</div>
 		</div>
+		
+		<script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+		<!-- <script src='wheel.js'></script> -->
 		<script src='jquery-3.5.1.min.js'></script>
 		<script src='bootstrap.min.js'></script>
 		<script src='roulette.min.js'></script>

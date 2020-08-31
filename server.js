@@ -3,123 +3,122 @@ const app = express();
 const port = process.env.PORT || 3000;
 const fs = require('fs');
 const path = require('path');
+const members = require('./members');
 
-let data = {};
+let data;
 
-app.use(express.static('public'));
+initialize_server();
 
-app.listen(port, () => {
-    console.log(`Pick Me Server listening at http://localhost:${port}`);
-});
-
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname + '/index.html'));
-});
-
-fs.readFile('./member_states.json', 'utf8', (err, jsonString) => {
-    if (err) {
-        console.log("Member state file read failed:", err)
-        return
-    }
-    data = JSON.parse(jsonString);
-})
-
-/*
--- Validation -- 
-Check if probability initialization required.
--- Validation -- 
-Read in the member list.
-Pick a member based on probabiliy.
-Adjust the probability of winner.
-Write the results to file.
-*/
-app.get('/run_pick_me', (req, res) => {
-    avaialble_members = find_available_memebers();
-    if (avaialble_members.length > 0) {
-        n = avaialble_members.length;
-        picked_index = Math.floor(Math.random() * n);
-        member_id_selected = avaialble_members[picked_index];
-        member_index = member_id_selected - 1;
-        res.send(data.members[member_index]);
-    }
-    else {
-        res.sendStatus(368);
-    }
-});
-
-app.get('/finalize_pick/:pick', (req, res) => {
-    member_id = req.params.pick;
-    member_index = member_id_selected - 1;
-    // console.log(member_id);
-    data.members[member_index].probability = 0;
-    data.members[member_index].karma += 100;
-    res.sendStatus(200);
-});
-
-app.get('/reinitialize', (req, res) => {
-    data.members.forEach(member => {
-        member.probability = 1;
-    });
-    res.sendStatus(200);
-});
-
-app.get('/get_members', (req, res) => {
-    res.send(data.members);
-});
-
-
-app.get('/save', (req, res) => {
-    fs.writeFile('member_states.json', JSON.stringify(data), function(err) {
-        if (err) {
-            return console.log.err('Not able to save data to file');
-        }
-        console.log('Data saved to file successfully')
-    });
-    res.sendStatus(200);
-});
-
-
-/*
-Use this function to add a new member to be considered 
-for the pick_me program.
-*/
-function add_member(member) {
-    data = {
-        name: 'Pranshu',
-        probability: 1
-    };
-
-    fs.writeFile('test_data.json', data, function(err) {
-        if (err) {
-            return console.log.err('Not able to save data to file');
-        }
-        console.log('Data saved to file successfully')
-    });
-}
-
-/*
-Use this function to add a new member to be considered 
-for the pick_me program.
-*/
-function remove_member(member) {
-    //pass
-}
-
-/*
-Use this function to initialize the probabilities
-of the team members. A fresh start.
-*/
-function initialize_probabilities() {
-    //pass
-}
-
+setup_routes();
 
 function find_available_memebers() {
     available_members = [];
-    data.members.forEach(member => {
+    data.forEach(member => {
         if (member.probability > 0) {
-            available_members.push(member.id);
+            available_members.push(member._id);
         }
     });
+    console.log(available_members);
     return available_members;
+}
+
+function initialize_server() {
+    app.use(express.static('public'));
+    
+    app.listen(port, () => {
+        console.log(`Pick Me Server listening at http://localhost:${port}`);
+    });
+}
+
+function setup_routes() {
+    app.get('/', (req, res) => {
+        res.sendFile(path.join(__dirname + '/index.html'));
+    });
+
+    app.get('/run_pick_me', (req, res) => {
+        avaialble_members = find_available_memebers();
+        if (avaialble_members.length > 0) {
+            n = avaialble_members.length;
+            picked_index = Math.floor(Math.random() * n);
+            member_id_selected = avaialble_members[picked_index];
+            member_index = member_id_selected - 1;
+            res.send(data[member_index]);
+        }
+        else {
+            res.sendStatus(368);
+        }
+    });
+    
+    // app.get('/finalize_pick/:pick', (req, res) => {
+    //     member_id = req.params.pick;
+    //     member_index = member_id_selected - 1;
+    //     // console.log(member_id);
+    //     data[member_index].probability = 0;
+    //     data[member_index].karma += 100;
+    //     res.sendStatus(200);
+    // });
+    
+    app.get('/reinitialize', (req, res) => {
+        data.forEach(member => {
+            members.enable(member._id);
+        });
+        res.sendStatus(200);
+    });
+    
+    app.get('/get_members', (req, res) => {
+        members.find_all().then( (docs) => {
+            data = docs
+            res.send(data);
+        })
+        .catch( (err) => {
+            console.log(err);
+        });
+    });
+
+    app.get('/get_members/:team_name', (req, res) => {
+        members.find_team_members(req.params.team_name).then( (docs) => {
+            data = docs
+            res.send(data);
+        })
+        .catch( (err) => {
+            console.log(err);
+        });
+    });
+    
+    app.get('/save', (req, res) => {
+        fs.writeFile('member_states.json', JSON.stringify(data), function(err) {
+            if (err) {
+                return console.log.err('Not able to save data to file');
+            }
+            console.log('Data saved to file successfully')
+        });
+        res.sendStatus(200);
+    });
+
+    app.get('/disable/:member_id', (req, res) => {
+        members.disable(parseInt(req.params.member_id)).then( (msg) => {
+            res.send(msg);
+        })
+        .catch( (err) => {
+            console.log(err);
+        });
+    });
+    
+    app.get('/enable/:member_id', (req, res) => {
+        members.enable(parseInt(req.params.member_id)).then( (msg) => {
+            res.send(msg);
+        })
+        .catch( (err) => {
+            console.log(err);
+        });
+    });
+
+    app.get('/finalize_pick/:pick', (req, res) => {
+        members.finalize_pick(parseInt(req.params.pick)).then( (msg) => {
+            res.send(msg);
+        })
+        .catch( (err) => {
+            console.log(err);
+        });
+    });
 }
