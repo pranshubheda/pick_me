@@ -71,15 +71,9 @@ exports.find_team_members = function (team_name) {
 
 exports.disable = function (member_id) {
     return new Promise((resolve, reject) => {
-        members_collection.updateOne(
-            {
-                _id: member_id
-            },
-            {
-                $set: {
-                    probability : 0 
-                }
-            }
+        let query = { _id: member_id };
+        let new_value = { $set: { probability : 0 } };
+        members_collection.updateOne( query, new_value
         , function(err, res) {        
             if (err) {
                 return reject(err)

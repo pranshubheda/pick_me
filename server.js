@@ -34,29 +34,6 @@ function setup_routes() {
     app.get('/', (req, res) => {
         res.sendFile(path.join(__dirname + '/index.html'));
     });
-
-    app.get('/run_pick_me', (req, res) => {
-        avaialble_members = find_available_memebers();
-        if (avaialble_members.length > 0) {
-            n = avaialble_members.length;
-            picked_index = Math.floor(Math.random() * n);
-            member_id_selected = avaialble_members[picked_index];
-            member_index = member_id_selected - 1;
-            res.send(data[member_index]);
-        }
-        else {
-            res.sendStatus(368);
-        }
-    });
-    
-    // app.get('/finalize_pick/:pick', (req, res) => {
-    //     member_id = req.params.pick;
-    //     member_index = member_id_selected - 1;
-    //     // console.log(member_id);
-    //     data[member_index].probability = 0;
-    //     data[member_index].karma += 100;
-    //     res.sendStatus(200);
-    // });
     
     app.get('/reinitialize', (req, res) => {
         data.forEach(member => {

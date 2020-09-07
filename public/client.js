@@ -3,42 +3,14 @@ let picked_member_id= -1;
 let data = [];
 let svg;
 
-function run_pick_me() {
-    fetch('/run_pick_me')
-        .then(response => {
-            console.log(response);
-            if(response.ok && response.status !=368 ) return response.json();
-            else if(!response.ok && response.status == 368 ) {
-                return reinitialize_alert();
-            }
-            else {
-                throw new Error('Request failed.');
-            }
-        })
-        .then(data => {
-            picked_member_id = data._id;
-            picked_member_index = picked_member_id-1;
-            // console.log(picked_member_index);
-            create_roulette(picked_member_index);
-            // document.getElementById('picked_member_display').innerText = data.name;
-            // document.getElementById('picked_member_display').style.display = '';
-            // document.getElementById('finalize').style.display = '';
-        })
-        .catch(error => {
-            console.error('Unsuccessful response');
-        })
-}
-
 function finalize_pick() {
-    console.log(picked_member_id);
     fetch(`/finalize_pick/${picked_member_id}`)
         .then(response => {
             if(response.ok) {
                 get_members();  
-                // document.getElementById('picked_member_display').style.color = 'green';
-                confirmation_alert();
+                show_confirmation_alert();
                 setTimeout(() => {
-                    // document.getElementById("pick_confirmed_close").click();
+                    document.getElementById("pick_confirmed_close").click();
                 }, 3000);
             }
             else {
@@ -53,7 +25,8 @@ function finalize_pick() {
 function reinitialize() {
     fetch(`/reinitialize`)
         .then(response => {
-            get_members();  
+            get_members();
+            show_reinitialization_alert();  
             setTimeout(() => {
                 document.getElementById("reinitialize_close").click();
             }, 3000);
@@ -101,34 +74,38 @@ function get_members() {
     })
 }
 
-function enable_member() {
-    fetch(`/enable/1`)
+function enable_member(member_id) {
+    fetch(`/enable/${member_id}`)
     .then(response => {
+        console.log(response);
         if(response.ok) return response.json();
         throw new Error('Request failed.');
     })
     .then(data => {
         // console.log(data);
-        members = data;
+        // members = data;
         //populate table
-        populate_table();
+        // populate_table();
+        get_members();
     })
     .catch(error => {
         console.error('Unsuccessful response');
     })
 }
 
-function disable_member() {
-    fetch(`/disable/1`)
+function disable_member(member_id) {
+    fetch(`/disable/${member_id}`)
     .then(response => {
+        console.log(response);
         if(response.ok) return response.json();
         throw new Error('Request failed.');
     })
     .then(data => {
         // console.log(data);
-        members = data;
+        // members = data;
         //populate table
-        populate_table();
+        // populate_table();
+        get_members();
     })
     .catch(error => {
         console.error('Unsuccessful response');
@@ -140,121 +117,68 @@ function populate_table() {
     let table_body = document.getElementById('table_body');
     for (let i = 0; i < members.length; i++) {
         const member = members[i];
-        // console.log(member);
-        let insert_row_string = `<tr><th scope=\'row\'>${member._id}</th><td>${member.name}</td><td>${member.probability}</td><td>${member.karma}</td></tr>`;
+
+        let row_class = ['data_row'];
+        if (member.probability == 0) {
+            row_class.push('do_not_enter_draw');
+        }else {
+            row_class.push('enter_draw');
+        }
+        let row_class_string = row_class.join(' ');
+        let insert_row_string = `<tr class='${row_class_string}'><td>${member._id}</td><td>${member.name}</td><td>${member.probability}</td><td>${member.karma}</td></tr>`;
         member_data_inner_html += insert_row_string;
     }
     table_body.innerHTML = member_data_inner_html;
+    // add data_row listener
+    var data_row_elements = document.getElementsByClassName('data_row');
+    for(var i=0; i<data_row_elements.length; i++)
+    {
+        let data_row_element = data_row_elements[i];
+        data_row_element.addEventListener("click", () => {
+            let toggle_member_id = parseInt(data_row_element.firstChild.innerHTML);
+            toggle_member_probability(toggle_member_id);
+        });
+    }
 }
 
-function save() {
-    fetch('/save')
-    .then(response => {
-        console.log(response);
-        if(response.ok && response.status == 200) {
-            console.log("TEST")
-            save_alert();
-        }
-        else {
-            throw new Error('Request failed.');
-        }
-    })
-    .catch(error => {
-        console.error('Not able to save file successfully.');
-    })    
-}
+function toggle_member_probability(toggle_member_id) {
+    const toggle_member = members[toggle_member_id-1];
+    if(toggle_member.probability == 0) {
+        enable_member(toggle_member_id);
+    }
+    else {
+        disable_member(toggle_member_id);
+    }
 
-$('#alert_div').on('close.bs.alert', function () {
-    on_close_confirmation_alert();
-});
+}
 
 function on_close_confirmation_alert() {
-    // document.getElementById('picked_member_display').innerText = '';
-    // document.getElementById('picked_member_display').style.display = 'none';
     document.getElementById('finalize').style.display = 'none';
 }
-
-$('#reinitialize_div').on('close.bs.alert', function () {
-    on_close_reinitialize_alert();
-});
 
 function on_close_reinitialize_alert() {
     document.getElementById('reinitialize').style.display = 'none';
 }
 
-let confirmation_alert = function(message) {
+let show_confirmation_alert = function(message) {
     $('#alert_div').html('<div class="alert alert-success"><a class="close" data-dismiss="alert" id="pick_confirmed_close">×</a><span>Pick Confirmed!</span></div>');
 }
 
-let reinitialize_alert = function(message) {
+let show_reinitialization_alert = function(message) {
     document.getElementById('reinitialize').style.display = '';
     $('#reinitialize_div').html('<div class="alert alert-primary"><a class="close" data-dismiss="alert" id="reinitialize_close">×</a><span>No new members left. Reinitialize probabilities.</span></div>');
 }
 
-let save_alert = function(message) {
-    $('#save_alert_div').html('<div class="alert alert-success"><a class="close" data-dismiss="alert" id="save_alert_close">×</a><span>Member states saved!</span></div>');
-}
-
-let create_roulette = function(member_index) {
-    var option = {
-        speed : 10,
-        duration : 3,
-        stopImageNumber : member_index,
-        startCallback : function() {
-            // console.log('start');
-        },
-        slowDownCallback : function() {
-            // console.log('slowDown');
-        },
-        stopCallback : function($stopElm) {
-            // console.log('stop');
-        }
-    };
-    $('div.roulette').roulette('option', option);	
-    $('div.roulette').roulette('start');
-}
-
-var option = {
-    speed : 10,
-    duration : 3,
-    stopImageNumber : 0,
-    startCallback : function() {
-        // console.log('start');
-    },
-    slowDownCallback : function() {
-        // console.log('slowDown');
-    },
-    stopCallback : function($stopElm) {
-        // console.log('stop');
-    }
-};
-$('div.roulette').roulette(option);
-
-function init() {
-    get_members();
-}
-
-
-// var data = [
-//             {"label":"Dell LAPTOP",  "value":1,  "question":"What CSS property is used for specifying the area between the content and its border?"}, // padding
-//             {"label":"IMAC PRO",  "value":1,  "question":"What CSS property is used for changing the font?"}, //font-family
-//             {"label":"SUZUKI",  "value":1,  "question":"What CSS property is used for changing the color of text?"}, //color
-//             {"label":"HONDA",  "value":1,  "question":"What CSS property is used for changing the boldness of text?"}, //font-weight
-//             {"label":"FERRARI",  "value":1,  "question":"What CSS property is used for changing the size of text?"}, //font-size
-//             {"label":"APARTMENT",  "value":1,  "question":"What CSS property is used for changing the background color of a box?"}
-// ];
-
-var padding = {top:20, right:40, bottom:0, left:0},
-    w = 500 - padding.left - padding.right,
-    h = 500 - padding.top  - padding.bottom,
-    r = Math.min(w, h)/2,
-    rotation = 0,
-    oldrotation = 0,
-    picked = 100000,
-    oldpick = [],
-    color = d3.scale.category20();
-
 function wheelie() {
+    let padding = {top:20, right:40, bottom:0, left:0};
+    let w = 500 - padding.left - padding.right;
+    let h = 500 - padding.top  - padding.bottom;
+    let r = Math.min(w, h)/2;
+    let rotation = 0;
+    let oldrotation = 0;
+    let picked = 100000;
+    let oldpick = [];
+    let color = d3.scale.category20();
     svg = d3.select('#chart')
     .append("svg")
     .data([data])
@@ -297,13 +221,7 @@ function wheelie() {
     function spin(d){
     
         container.on("click", null);
-        //all slices have been seen, all done
-        console.log("OldPick: " + oldpick.length, "Data length: " + data.length);
-        if(oldpick.length == data.length){
-            console.log("done");
-            container.on("click", null);
-            return;
-        }
+
         var  ps       = 360/data.length,
             pieslice = Math.round(1440/data.length),
             rng      = Math.floor((Math.random() * 1440) + 360);
@@ -312,27 +230,15 @@ function wheelie() {
         
         picked = Math.round(data.length - (rotation % 360)/ps);
         picked = picked >= data.length ? (picked % data.length) : picked;
+        //pick the member
         picked_member_id = data[picked]._id;
-        // if(oldpick.indexOf(picked) !== -1){
-        //     d3.select(this).call(spin);
-        //     return;
-        // } else {
-            // oldpick.push(picked);
-        // }
+        console.log(`Picked Member ID: ${picked_member_id}`);
+
         rotation += 90 - Math.round(ps/2);
         vis.transition()
             .duration(3000)
             .attrTween("transform", rotTween)
             .each("end", function(){
-                //mark question as seen
-                // d3.select(".slice:nth-child(" + (picked + 1) + ") path")
-                //     .attr("fill", "#111");
-                //populate question
-                // d3.select("#question h1")
-                //     .text(data[picked].question);
-                // oldrotation = rotation;
-                // console.log(picked_member_id);
-                // finalize_pick();
                 document.getElementById('finalize').style.display = '';
                 container.on("click", spin);
             });
@@ -357,12 +263,24 @@ function wheelie() {
         .attr("text-anchor", "middle")
         .text("SPIN")
         .style({"font-weight":"bold", "font-size":"30px"});
+    
+    function rotTween(to) {
+        var i = d3.interpolate(oldrotation % 360, rotation);
+        return function(t) {
+        return "rotate(" + i(t) + ")";
+        };
+    }
 }
 
-
-function rotTween(to) {
-  var i = d3.interpolate(oldrotation % 360, rotation);
-  return function(t) {
-    return "rotate(" + i(t) + ")";
-  };
+function init() {
+    get_members();
 }
+
+$('#alert_div').on('close.bs.alert', function () {
+    on_close_confirmation_alert();
+});
+
+$('#reinitialize_div').on('close.bs.alert', function () {
+    on_close_reinitialize_alert();
+});
+

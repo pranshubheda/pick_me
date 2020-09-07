@@ -1,0 +1,16 @@
+thead {
+    background-color:hsl(209, 100%, 90%);
+}
+
+.enter_draw {
+    background-color:hsl(90, 100%, 80%);
+}
+
+.do_not_enter_draw {
+    background-color:hsl(0, 100%, 90%);
+}
+
+tr:hover{
+    background-color:gray;
+    cursor:pointer;
+}
