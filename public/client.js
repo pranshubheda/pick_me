@@ -82,10 +82,6 @@ function enable_member(member_id) {
         throw new Error('Request failed.');
     })
     .then(data => {
-        // console.log(data);
-        // members = data;
-        //populate table
-        // populate_table();
         get_members();
     })
     .catch(error => {
@@ -96,15 +92,10 @@ function enable_member(member_id) {
 function disable_member(member_id) {
     fetch(`/disable/${member_id}`)
     .then(response => {
-        console.log(response);
         if(response.ok) return response.json();
         throw new Error('Request failed.');
     })
     .then(data => {
-        // console.log(data);
-        // members = data;
-        //populate table
-        // populate_table();
         get_members();
     })
     .catch(error => {
