@@ -1,19 +1,4 @@
-const { query } = require('express');
-const uri = process.env.MONGOLAB_URI;
-const MongoClient = require('mongodb').MongoClient;
-const client = new MongoClient(uri, { useNewUrlParser: true });
-
-let db_name = 'pick_me';
-let db;
-let members_collection;
-
-client.connect().then(() => {
-    db = client.db(db_name);
-    members_collection = db.collection('members');
-})
-.catch((err) => {
-    console.log(err);
-});
+const db = require("./db");
 
 exports.add_member = function(member) {
     data = {
@@ -39,6 +24,7 @@ exports.update_member = function (member) {
 
 exports.find_all = function () {
     return new Promise((resolve, reject) => {
+        let members_collection = db.get_members_collection();
         members_collection.find().toArray( function(err, members) {        
             if (err) {
                 return reject(err)
@@ -50,6 +36,7 @@ exports.find_all = function () {
 
 exports.find_team_members = function (team_name) {
     return new Promise((resolve, reject) => {
+        let members_collection = db.get_members_collection();
         members_collection.aggregate([
             {
                 $unwind: '$teams'
@@ -73,6 +60,7 @@ exports.disable = function (member_id) {
     return new Promise((resolve, reject) => {
         let query = { _id: member_id };
         let new_value = { $set: { probability : 0 } };
+        let members_collection = db.get_members_collection();
         members_collection.updateOne( query, new_value
         , function(err, res) {        
             if (err) {
@@ -87,6 +75,7 @@ exports.enable = function (member_id) {
     return new Promise((resolve, reject) => {
         let query = { _id: member_id };
         let new_value = { $set: { probability : 1 } };
+        let members_collection = db.get_members_collection();
         members_collection.updateOne( query, new_value
         , function(err, res) {        
             if (err) {
@@ -101,6 +90,7 @@ exports.finalize_pick = function (member_id) {
     return new Promise((resolve, reject) => {
         let query = { _id: member_id };
         let new_value = { $set: { probability : 0 }, $inc: { karma : 100 } };
+        let members_collection = db.get_members_collection();
         members_collection.updateOne( query, new_value
         , function(err, res) {        
             if (err) {

@@ -3,6 +3,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 const fs = require('fs');
 const path = require('path');
+const db = require('./db');
 const members = require('./members');
 
 let data;
@@ -28,6 +29,8 @@ function initialize_server() {
     app.listen(port, () => {
         console.log(`Pick Me Server listening at http://localhost:${port}`);
     });
+
+    db.connect_to_db();
 }
 
 function setup_routes() {
@@ -101,5 +104,9 @@ function setup_routes() {
         .catch( (err) => {
             console.log(err);
         });
+    });
+
+    app.get('/add_team/:team_name', (req, res) => {
+        
     });
 }
