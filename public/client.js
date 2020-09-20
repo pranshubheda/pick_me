@@ -1,4 +1,4 @@
-let members = [];
+let members = {};
 let picked_member_id= -1;
 let data = [];
 let svg;
@@ -49,7 +49,7 @@ function get_members() {
         populate_table();
         // console.log(members);
         data = [];
-        members.forEach(member => {
+        Object.values(members).forEach(member => {
             if(member.probability > 0){
                 data_obj = {'label': member.name, 'value':1,  'question': '', '_id': member._id};
                 data.push(data_obj);
@@ -106,9 +106,7 @@ function disable_member(member_id) {
 function populate_table() {
     let member_data_inner_html = '';
     let table_body = document.getElementById('table_body');
-    for (let i = 0; i < members.length; i++) {
-        const member = members[i];
-
+    Object.values(members).forEach(member => {
         let row_class = ['data_row'];
         if (member.probability == 0) {
             row_class.push('do_not_enter_draw');
@@ -118,7 +116,8 @@ function populate_table() {
         let row_class_string = row_class.join(' ');
         let insert_row_string = `<tr class='${row_class_string}'><td>${member._id}</td><td>${member.name}</td><td>${member.probability}</td><td>${member.karma}</td></tr>`;
         member_data_inner_html += insert_row_string;
-    }
+    });
+
     table_body.innerHTML = member_data_inner_html;
     // add data_row listener
     var data_row_elements = document.getElementsByClassName('data_row');
@@ -133,7 +132,7 @@ function populate_table() {
 }
 
 function toggle_member_probability(toggle_member_id) {
-    const toggle_member = members[toggle_member_id-1];
+    const toggle_member = members[toggle_member_id];
     if(toggle_member.probability == 0) {
         enable_member(toggle_member_id);
     }
@@ -206,7 +205,7 @@ function wheelie() {
     })
     .attr("text-anchor", "end")
     .text( function(d, i) {
-        return data[i].label;
+        return d.data.label;
     });
     container.on("click", spin);
     function spin(d){

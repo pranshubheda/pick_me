@@ -54,7 +54,11 @@ function setup_routes() {
 
     app.get('/get_members/:team_name', (req, res) => {
         members.find_team_members(req.params.team_name).then( (docs) => {
-            data = docs
+            team_members = docs
+            data = {}
+            team_members.forEach(team_member => {
+                data[team_member._id] = team_member;
+            });
             res.send(data);
         })
         .catch( (err) => {
