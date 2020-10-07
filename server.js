@@ -5,12 +5,11 @@ const fs = require('fs');
 const path = require('path');
 const db = require('./db');
 const members = require('./members');
+const teams = require('./teams');
+const bodyParser = require('body-parser'); 
+app.use(bodyParser.json()); 
 
 let data;
-
-initialize_server();
-
-setup_routes();
 
 function find_available_memebers() {
     available_members = [];
@@ -31,6 +30,7 @@ function initialize_server() {
     });
 
     db.connect_to_db();
+    // console.log(db.get_members_collection())
 }
 
 function setup_routes() {
@@ -106,7 +106,27 @@ function setup_routes() {
         });
     });
 
-    app.get('/add_team/:team_name', (req, res) => {
-        
+    app.post('/add_team/', (req, res) => {
+        var team = req.body;
+        teams.add_team(team.name).then( (docs) => {
+            res.status(200).send("Successfully added team");
+        })
+        .catch( (err) => {
+            res.status(403).send(err)
+        });
+    });
+
+    app.post('/add_member/', (req, res) => {
+        var member = req.body;
+        members.add_member(member).then( (docs) => {
+            res.status(200).send("Successfully added member");
+        })
+        .catch( (err) => {
+            res.status(403).send(err)
+        });
     });
 }
+
+initialize_server();
+
+setup_routes();

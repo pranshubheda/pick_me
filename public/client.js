@@ -159,6 +159,17 @@ let show_reinitialization_alert = function(message) {
     $('#reinitialize_div').html('<div class="alert alert-primary"><a class="close" data-dismiss="alert" id="reinitialize_close">×</a><span>No new members left. Reinitialize probabilities.</span></div>');
 }
 
+let show_success_form_alert = function(message) {
+    document.getElementById('form_alert').style.display = '';
+    $('#reinitialize_div').html('<div class="alert alert-success"><a class="close" data-dismiss="alert" id="reinitialize_close">×</a><span>'+message+'</span></div>');
+}
+
+let show_failure_form_alert = function(message) {
+    document.getElementById('form_alert').style.display = '';
+    $('#reinitialize_div').html('<div class="alert alert-danger"><a class="close" data-dismiss="alert" id="reinitialize_close">×</a><span>'+message+'</span></div>');
+}
+
+
 function wheelie() {
     let padding = {top:20, right:40, bottom:0, left:0};
     let w = 500 - padding.left - padding.right;
@@ -260,6 +271,77 @@ function wheelie() {
         return "rotate(" + i(t) + ")";
         };
     }
+}
+
+function handleErrors(response) {
+    if (!response.ok) {
+        return response.text().then(text => {
+            throw new Error(text)
+        });
+    }
+    return response;
+}
+
+function add_team() {
+    event.preventDefault();
+    let team_name = document.getElementById("team_name").value;
+    let team = {};
+    team.name = team_name;
+    const options = {
+        method: 'POST',
+        body: JSON.stringify(team),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    };
+
+    fetch('/add_team/', options)
+    .then(handleErrors)
+    .then(response => {
+        return response.text();
+    })
+    .then(response_text => {
+        show_success_form_alert(response_text);
+        get_members();
+    })
+    .catch( error_text => {
+        console.log(error_text.message);
+        show_failure_form_alert(error_text.message);
+    })
+}
+
+function add_member() {
+    event.preventDefault();
+    let name = document.getElementById("member_name").value;
+    let karma_points = document.getElementById("karma_points").value;
+    let assign_team = document.getElementById("assign_team").value;
+    let probability = 0;
+    let member = {};
+    member.name = name;
+    member.probability = probability;
+    member.karma = karma_points;
+    member.teams = [assign_team];
+
+    const options = {
+        method: 'POST',
+        body: JSON.stringify(member),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    };
+
+    fetch('/add_member/', options)
+    .then(handleErrors)
+    .then(response => {
+        return response.text();
+    })
+    .then(response_text => {
+        show_success_form_alert(response_text);
+        get_members();
+    })
+    .catch( error => {
+        show_failure_form_alert(error.message);
+    })
 }
 
 function init() {

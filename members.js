@@ -1,27 +1,5 @@
 const db = require("./db");
 
-exports.add_member = function(member) {
-    data = {
-        name: 'Pranshu',
-        probability: 1
-    };
-
-    fs.writeFile('test_data.json', data, function(err) {
-        if (err) {
-            return console.log.err('Not able to save data to file');
-        }
-        console.log('Data saved to file successfully')
-    });
-}
-
-exports.remove_member = function (member) {
-    //pass
-}
-
-exports.update_member = function (member) {
-    //pass
-}
-
 exports.find_all = function () {
     return new Promise((resolve, reject) => {
         let members_collection = db.get_members_collection();
@@ -98,5 +76,64 @@ exports.finalize_pick = function (member_id) {
             }
             return resolve(res)
         }); 
+    });
+}
+
+exports.add_member = function (member) {
+    return new Promise((resolve, reject) => {
+        this.check_if_exists(member.name).then( members => {
+            let member_exists = members.length > 0 ? true : false;
+            if (member_exists) {
+                return reject("Member already exists");
+            }
+            this.find_max_id().then(max_id => {
+                let new_member = member;
+                new_member._id = max_id + 1;
+                insert_member(new_member).then(res => {
+                    return resolve(res);                        
+                }).catch (err => {
+                    return reject(err);
+                });
+            })
+        }).catch (err => {
+            return reject(err);
+        });
+    });
+}
+
+exports.check_if_exists = function(member_name) {
+    return new Promise((resolve, reject) => {
+        let members_collection = db.get_members_collection();
+        let query = { name : { $exists : true, $in: [member_name] } }
+        members_collection.find(query).toArray( function(err, members) {
+            if (err) {
+                return reject(err)
+            }
+            return resolve(members);
+        });
+    });
+}
+
+exports.find_max_id = function() {
+    return new Promise((resolve, reject) => {
+        let members_collection = db.get_members_collection();
+        members_collection.find().sort([['_id', -1]]).limit(1).next((err, max_id_member) => {
+            if (err) {
+                return reject(err);
+            }
+            return resolve(max_id_member._id);
+        });
+    });
+}
+
+function insert_member(new_member) {
+    return new Promise((resolve, reject) => {
+        let members_collection = db.get_members_collection();
+        members_collection.insertOne(new_member, function(err, res) {
+            if (err) {
+                return reject(err);
+            }
+            return resolve("Successfully added member, here is the result "+ res);
+        });
     });
 }

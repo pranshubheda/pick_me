@@ -3,12 +3,14 @@
 		<title>Pick Me</title>
 		<link rel='icon' type='image/png' href='/favicon.png' />
 		<link rel='stylesheet' href='bootstrap.min.css'>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.7.5/css/bootstrap-select.min.css">
 		<link rel='stylesheet' href='bootstrap-theme.min.css'>
 		<link rel='stylesheet' href='wheel.css'>
 		<link rel='stylesheet' href='pick_me.css'>
 	</head>
 	<body onload='init()'>
 		<div class='container'>
+			<div class="row">
 			<h1 class="display-2">Pick Me</h1>
 			<div id='test'></div>
 			<div id='member_data'>
@@ -30,15 +32,61 @@
 			<div id="save_alert_div" style="padding-top: 10;"></div>
 			<div id="alert_div"></div>
 			<div id="reinitialize_div"></div>
-
-			<div id="wheel">
-				<div id="chart"></div>
 			</div>
+
+			<div class="row">
+				<div class="col-sm">
+					<div id="wheel">
+						<div id="chart"></div>
+					</div>
+				</div>
+				<div class="col-sm">
+					<div class="row">
+						<div class="col-sm">
+							<form class="add_member">
+								<div class="form-group">
+								  <label for="member_name">Member Name</label>
+								  <input type="text" class="form-control" id="member_name" placeholder="Enter member name">
+								</div>
+								<div class="form-group">
+									<label for="karma_points">Karma Points</label>
+									<input type="number" class="form-control" id="karma_points" placeholder="Enter karma points">
+								</div>
+								<div class="form-group">
+									<label for="assign_teams_list">Assign Teams</label>
+									<select name="assign_teams_list" class="selectpicker assign_teams_list" data-live-search="true" multiple>
+										<option>Mustard</option>
+										<option>Ketchup</option>
+										<option>Relish</option>
+									</select>									  
+								</div>
+
+								<div class="form-group">
+									<label for="assign_team">Assigned Team</label>
+									<input type="text" class="form-control" id="assign_team" placeholder="Enter team name" onkeyup="this.value = this.value.toUpperCase();">
+									<div >
+								</div>
+								<button type="submit" class="btn btn-primary" onclick="add_member()">Submit</button>
+							</form>
+						</div>
+						<div class="col-sm">
+							<form class="add_team">
+								<div class="form-group">
+								  <label for="team_name">Team Name</label>
+								  <input type="text" class="form-control" id="team_name" placeholder="Enter team name" onkeyup="this.value = this.value.toUpperCase();">
+								</div>
+								<button type="submit" class="btn btn-primary" onclick="add_team()">Submit</button>
+							</form>
+						</div>
+					</div>
+					<div id="form_alert"></div>
+				</div>
+			</div>
+
 		</div>
-		
-		<script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
 		<script src='jquery-3.5.1.min.js'></script>
 		<script src='bootstrap.min.js'></script>
+		<script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
 		<script src='client.js'></script>
 	</body>
 </html>

@@ -4,26 +4,9 @@ text{
     pointer-events:none;
 }
 #chart{
-    width:80%;
+    width:50%;
     height:500px;
     top:0;
     left:0;
     float: left
-}
-#question{
-    width:20%;
-    height:200px;
-    top:0;
-    left:0;
-    float: right
-}
-#question h1{
-    font-size: 50px;
-    font-weight: bold;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    padding: 0;
-    margin: 0;
-    top:50%;
-    -webkit-transform:translate(0,-50%);
-            transform:translate(0,-50%);
 }

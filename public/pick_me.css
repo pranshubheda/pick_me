@@ -14,3 +14,19 @@ tr:hover{
     background-color:gray;
     cursor:pointer;
 }
+
+.add_team {
+    float: right;
+    width: 20%;
+    padding: 5px;
+}
+
+.add_member {
+    float: left;
+    width: 25%;
+    padding: 5px;
+}
+
+.assign_teams_list {
+    width: 100%;
+}
