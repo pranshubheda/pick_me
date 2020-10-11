@@ -344,8 +344,33 @@ function add_member() {
     })
 }
 
+function get_all_teams() {
+    fetch('/get_all_teams')
+    .then(response => {
+        if(response.ok) return response.json();
+        throw new Error('Request failed.');
+    })
+    .then(res_data => {
+        // console.log(data);
+        select_teams_drop_down_table = '';
+        // assign_teams_list
+        console.log(res_data);
+        assign_teams_list = document.getElementById('assign_teams').children[2];
+        teams = res_data;
+        Object.values(teams).forEach(team => {
+            let insert_row_string = `<li><input type="checkbox" class="team_checkbox"/>${team.name}</li>`;
+            select_teams_drop_down_table += insert_row_string;
+        });
+        assign_teams_list.innerHTML = select_teams_drop_down_table;
+    })
+    .catch(error => {
+        console.error(error);
+    })
+}
+
 function init() {
     get_members();
+    get_all_teams();
 }
 
 $('#alert_div').on('close.bs.alert', function () {
@@ -355,4 +380,3 @@ $('#alert_div').on('close.bs.alert', function () {
 $('#reinitialize_div').on('close.bs.alert', function () {
     on_close_reinitialize_alert();
 });
-

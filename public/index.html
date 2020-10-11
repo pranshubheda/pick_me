@@ -3,10 +3,11 @@
 		<title>Pick Me</title>
 		<link rel='icon' type='image/png' href='/favicon.png' />
 		<link rel='stylesheet' href='bootstrap.min.css'>
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.7.5/css/bootstrap-select.min.css">
 		<link rel='stylesheet' href='bootstrap-theme.min.css'>
 		<link rel='stylesheet' href='wheel.css'>
+		<link rel='stylesheet' href='dropdown_checklist.css'>
 		<link rel='stylesheet' href='pick_me.css'>
+</head>
 	</head>
 	<body onload='init()'>
 		<div class='container'>
@@ -53,18 +54,13 @@
 									<input type="number" class="form-control" id="karma_points" placeholder="Enter karma points">
 								</div>
 								<div class="form-group">
-									<label for="assign_teams_list">Assign Teams</label>
-									<select name="assign_teams_list" class="selectpicker assign_teams_list" data-live-search="true" multiple>
-										<option>Mustard</option>
-										<option>Ketchup</option>
-										<option>Relish</option>
-									</select>									  
-								</div>
-
-								<div class="form-group">
-									<label for="assign_team">Assigned Team</label>
-									<input type="text" class="form-control" id="assign_team" placeholder="Enter team name" onkeyup="this.value = this.value.toUpperCase();">
-									<div >
+									<div id="assign_teams" class="dropdown-check-list assign_teams_list">
+										<label for="assign_team">Assign Team</label>
+										<span name="assign_team" class="anchor assign_teams_list">Click to view teams</span>
+										<ul class="items" id="assign_teams_list">
+										  <li><input type="checkbox" class="team_checkbox"/>Apple </li>
+										</ul>
+									</div>				  
 								</div>
 								<button type="submit" class="btn btn-primary" onclick="add_member()">Submit</button>
 							</form>
@@ -88,5 +84,14 @@
 		<script src='bootstrap.min.js'></script>
 		<script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
 		<script src='client.js'></script>
+		<script>
+			var checkList = document.getElementById('assign_teams');
+			checkList.getElementsByClassName('anchor')[0].onclick = function(evt) {
+			if (checkList.classList.contains('visible'))
+				checkList.classList.remove('visible');
+			else
+				checkList.classList.add('visible');
+			}
+		</script>
 	</body>
 </html>

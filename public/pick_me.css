@@ -30,3 +30,7 @@ tr:hover{
 .assign_teams_list {
     width: 100%;
 }
+
+.team_checkbox {
+    margin: 5px !important;
+}

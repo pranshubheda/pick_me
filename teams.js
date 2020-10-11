@@ -58,3 +58,15 @@ function insert_team(new_team) {
         });
     });
 }
+
+exports.find_all = function () {
+    return new Promise((resolve, reject) => {
+        let teams_collection = db.get_teams_collection();
+        teams_collection.find().toArray( function(err, teams) {        
+            if (err) {
+                return reject(err)
+            }
+            return resolve(teams)
+        }); 
+    });
+}

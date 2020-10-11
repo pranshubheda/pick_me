@@ -45,7 +45,7 @@ function setup_routes() {
         res.sendStatus(200);
     });
     
-    app.get('/get_members', (req, res) => {
+    app.get('/get_all_members', (req, res) => {
         members.find_all().then( (docs) => {
             data = docs
             res.send(data);
@@ -123,6 +123,16 @@ function setup_routes() {
         })
         .catch( (err) => {
             res.status(403).send(err)
+        });
+    });
+
+    app.get('/get_all_teams', (req, res) => {
+        teams.find_all().then( (docs) => {
+            data = docs
+            res.send(data);
+        })
+        .catch( (err) => {
+            console.log(err);
         });
     });
 }
