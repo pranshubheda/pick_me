@@ -175,6 +175,36 @@ function setup_routes() {
             console.log(err);
         });
     });
+
+    app.post('/update_member/', (req, res) => {
+        var member = req.body;
+        members.update(member).then( (docs) => {
+            res.status(200).send("Successfully updated member");
+        })
+        .catch( (err) => {
+            res.status(403).send(err);
+        });
+    });
+
+    app.post('/delete_member/', (req, res) => {
+        var member = req.body;
+        members.delete(member).then( (docs) => {
+            res.status(200).send("Successfully deleted member");
+        })
+        .catch( (err) => {
+            res.status(403).send(err);
+        });
+    });
+
+    app.post('/delete_team/', (req, res) => {
+        var team = req.body;
+        teams.delete(team).then( (docs) => {
+            res.status(200).send("Successfully deleted team");
+        })
+        .catch( (err) => {
+            res.status(403).send(err);
+        });
+    });
 }
 
 initialize_server();

@@ -156,15 +156,49 @@ exports.search = function (keyword) {
 
 exports.update = function (member) {
     return new Promise((resolve, reject) => {
-        let query = { name: member.name };
-        let new_value = { $set: { karma : member.karma, teams: member.teams } };
-        let members_collection = db.get_members_collection();
-        members_collection.updateOne( query, new_value
-        , function(err, res) {        
-            if (err) {
-                return reject(err)
+        this.check_if_exists(member.name).then( members => {
+            let member_exists = members.length > 0 ? true : false;
+            if (member_exists) {
+                let query = { name: member.name };
+                let new_value = { $set: { karma : member.karma, teams: member.teams } };
+                let members_collection = db.get_members_collection();
+                members_collection.updateOne( query, new_value
+                , function(err, res) {        
+                    if (err) {
+                        return reject(err)
+                    }
+                    return resolve(res)
+                });
             }
-            return resolve(res)
+            else {
+                return reject("Member does not exist");
+            }
+        }).catch (err => {
+            return reject(err);
+        }); 
+    });
+}
+
+exports.delete = function (member) {
+    return new Promise((resolve, reject) => {
+        this.check_if_exists(member.name).then( members => {
+            let member_exists = members.length > 0 ? true : false;
+            if (member_exists) {
+                let query = { name: member.name };
+                let members_collection = db.get_members_collection();
+                members_collection.deleteOne( query
+                , function(err, res) {        
+                    if (err) {
+                        return reject(err)
+                    }
+                    return resolve(res)
+                });
+            }
+            else {
+                return reject("Member does not exist");
+            }
+        }).catch (err => {
+            return reject(err);
         }); 
     });
 }

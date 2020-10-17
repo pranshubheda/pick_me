@@ -310,25 +310,7 @@ function add_team() {
 }
 
 function add_member() {
-    let name = document.getElementById("search_members_input").value;
-    let karma_points = document.getElementById("karma_points").value;
-    let probability = 0;
-    let member = {};
-
-    member.name = name;
-    member.probability = probability;
-    member.karma = karma_points;
-    member.teams = [];
-
-    all_teams_li = document.getElementById('assign_teams').children[2].children;
-    Object.values(all_teams_li).forEach(team_li => {
-        if( team_li.children[0].checked) {
-            let team_name = team_li.children[1].innerHTML; 
-            member.teams.push(team_name);
-        }
-    });
-
-
+    member = collect_member_form_data();
     const options = {
         method: 'POST',
         body: JSON.stringify(member),
@@ -395,7 +377,8 @@ function search_teams() {
             // assign_teams_list
             teams = res_data;
             Object.values(teams).forEach(team => {
-                let insert_row_string = `<a class="team" href="#">${team.name}</a>`;
+                let team_str = JSON.stringify(team);
+                let insert_row_string = `<a onClick='select_team(${team_str})' href='#' class="team" href="#">${team.name}</a>`;
                 search_result_items += insert_row_string;
             });
             search_teams_results.innerHTML = search_result_items;
@@ -453,6 +436,107 @@ function select_member(selected_member) {
             team_li.children[0].checked = true;
         }
     });
+}
+
+function select_team(selected_team) {
+    document.getElementById("search_teams_input").value = selected_team.name;
+    search_teams_results.innerHTML = "";
+}
+
+function collect_member_form_data() {
+    let name = document.getElementById("search_members_input").value;
+    let karma_points = document.getElementById("karma_points").value;
+    let probability = 0;
+    let member = {};
+
+    member.name = name;
+    member.probability = probability;
+    member.karma = karma_points;
+    member.teams = [];
+
+    all_teams_li = document.getElementById('assign_teams').children[2].children;
+    Object.values(all_teams_li).forEach(team_li => {
+        if( team_li.children[0].checked) {
+            let team_name = team_li.children[1].innerHTML; 
+            member.teams.push(team_name);
+        }
+    });
+
+    return member;
+}
+
+function update_member() {
+    member = collect_member_form_data();
+    const options = {
+        method: 'POST',
+        body: JSON.stringify(member),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    };
+
+    fetch('/update_member/', options)
+    .then(handleErrors)
+    .then(response => {
+        return response.text();
+    })
+    .then(response_text => {
+        show_success_form_alert(response_text);
+        get_members();
+    })
+    .catch( error => {
+        show_failure_form_alert(error.message);
+    })
+}
+
+function delete_member() {
+    member = collect_member_form_data();
+    const options = {
+        method: 'POST',
+        body: JSON.stringify(member),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    };
+
+    fetch('/delete_member/', options)
+    .then(handleErrors)
+    .then(response => {
+        return response.text();
+    })
+    .then(response_text => {
+        show_success_form_alert(response_text);
+        get_members();
+    })
+    .catch( error => {
+        show_failure_form_alert(error.message);
+    })
+}
+
+function delete_team() {
+    let team_name = document.getElementById("search_teams_input").value;
+    let team = {};
+    team.name = team_name;
+    const options = {
+        method: 'POST',
+        body: JSON.stringify(team),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    };
+
+    fetch('/delete_team/', options)
+    .then(handleErrors)
+    .then(response => {
+        return response.text();
+    })
+    .then(response_text => {
+        show_success_form_alert(response_text);
+        get_members();
+    })
+    .catch( error => {
+        show_failure_form_alert(error.message);
+    })
 }
 
 $('#alert_div').on('close.bs.alert', function () {

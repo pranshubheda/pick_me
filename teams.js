@@ -86,3 +86,27 @@ exports.search = function (keyword) {
         }); 
     });
 }
+
+exports.delete = function (team) {
+    return new Promise((resolve, reject) => {
+        this.check_if_exists(team.name).then( teams => {
+            let team_exists = teams.length > 0 ? true : false;
+            if (team_exists) {
+                let query = { name: team.name };
+                let teams_collection = db.get_teams_collection();
+                teams_collection.deleteOne( query
+                , function(err, res) {        
+                    if (err) {
+                        return reject(err)
+                    }
+                    return resolve(res)
+                });
+            }
+            else {
+                return reject("Team does not exist");
+            }
+        }).catch (err => {
+            return reject(err);
+        }); 
+    });
+}
