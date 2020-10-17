@@ -7,6 +7,7 @@
 		<link rel='stylesheet' href='wheel.css'>
 		<link rel='stylesheet' href='dropdown_checklist.css'>
 		<link rel='stylesheet' href='pick_me.css'>
+		<link rel='stylesheet' href='search.css'>
 </head>
 	</head>
 	<body onload='init()'>
@@ -47,7 +48,11 @@
 							<form class="add_member">
 								<div class="form-group">
 								  <label for="member_name">Member Name</label>
-								  <input type="text" class="form-control" id="member_name" placeholder="Enter member name">
+								  <div id="myDropdown" class="dropdown-content">
+									<input type="text" class="form-control" placeholder="Enter member name" id="search_members_input" onkeyup="search_members()">
+									<div id="search_members_results">
+									</div>
+								  </div>
 								</div>
 								<div class="form-group">
 									<label for="karma_points">Karma Points</label>
@@ -62,16 +67,24 @@
 										</ul>
 									</div>				  
 								</div>
-								<button type="submit" class="btn btn-primary" onclick="add_member()">Submit</button>
+								<button class="btn btn-primary" onclick="add_member()">Submit</button>
+								<button class="btn btn-warning" onclick="update_member()">Update</button>
+								<button class="btn btn-danger" onclick="delete_member()">Delete</button>
 							</form>
 						</div>
 						<div class="col-sm">
 							<form class="add_team">
 								<div class="form-group">
 								  <label for="team_name">Team Name</label>
-								  <input type="text" class="form-control" id="team_name" placeholder="Enter team name" onkeyup="this.value = this.value.toUpperCase();">
+								  <!-- <input type="text" class="form-control" id="team_name" placeholder="Enter team name" onkeyup="search_teams()"> -->
+								  <div id="myDropdown" class="dropdown-content">
+									<input type="text" class="form-control" placeholder="Enter team name" id="search_teams_input" onkeyup="search_teams()">
+									<div id="search_teams_results">
+									</div>
+								  </div>
 								</div>
-								<button type="submit" class="btn btn-primary" onclick="add_team()">Submit</button>
+								<button class="btn btn-primary" onclick="add_team()">Submit</button>
+								<button class="btn btn-danger" onclick="delete_team()">Delete</button>
 							</form>
 						</div>
 					</div>

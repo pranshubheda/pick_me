@@ -283,8 +283,7 @@ function handleErrors(response) {
 }
 
 function add_team() {
-    event.preventDefault();
-    let team_name = document.getElementById("team_name").value;
+    let team_name = document.getElementById("search_teams_input").value;
     let team = {};
     team.name = team_name;
     const options = {
@@ -311,16 +310,24 @@ function add_team() {
 }
 
 function add_member() {
-    event.preventDefault();
-    let name = document.getElementById("member_name").value;
+    let name = document.getElementById("search_members_input").value;
     let karma_points = document.getElementById("karma_points").value;
-    let assign_team = document.getElementById("assign_team").value;
     let probability = 0;
     let member = {};
+
     member.name = name;
     member.probability = probability;
     member.karma = karma_points;
-    member.teams = [assign_team];
+    member.teams = [];
+
+    all_teams_li = document.getElementById('assign_teams').children[2].children;
+    Object.values(all_teams_li).forEach(team_li => {
+        if( team_li.children[0].checked) {
+            let team_name = team_li.children[1].innerHTML; 
+            member.teams.push(team_name);
+        }
+    });
+
 
     const options = {
         method: 'POST',
@@ -354,11 +361,10 @@ function get_all_teams() {
         // console.log(data);
         select_teams_drop_down_table = '';
         // assign_teams_list
-        console.log(res_data);
         assign_teams_list = document.getElementById('assign_teams').children[2];
         teams = res_data;
         Object.values(teams).forEach(team => {
-            let insert_row_string = `<li><input type="checkbox" class="team_checkbox"/>${team.name}</li>`;
+            let insert_row_string = `<li><input type="checkbox" class="team_checkbox"/><span>${team.name}</span></li>`;
             select_teams_drop_down_table += insert_row_string;
         });
         assign_teams_list.innerHTML = select_teams_drop_down_table;
@@ -371,6 +377,82 @@ function get_all_teams() {
 function init() {
     get_members();
     get_all_teams();
+}
+
+function search_teams() {
+    search_keyword = document.getElementById('search_teams_input').value;
+    search_teams_results = document.getElementById('search_teams_results');
+
+    if(search_keyword !== "") {
+        fetch(`/search_teams/${search_keyword}`)
+        .then(response => {
+            if(response.ok) return response.json();
+            throw new Error('Request failed.');
+        })
+        .then(res_data => {
+            // console.log(data);
+            search_result_items = '';
+            // assign_teams_list
+            teams = res_data;
+            Object.values(teams).forEach(team => {
+                let insert_row_string = `<a class="team" href="#">${team.name}</a>`;
+                search_result_items += insert_row_string;
+            });
+            search_teams_results.innerHTML = search_result_items;
+        })
+        .catch(error => {
+            console.error(error);
+        })
+    }
+    else {
+        search_teams_results.innerHTML = "";
+    }
+}
+
+function search_members() {
+    search_keyword = document.getElementById('search_members_input').value;
+    search_members_results = document.getElementById('search_members_results');
+
+    if(search_keyword !== "") {
+        fetch(`/search_members/${search_keyword}`)
+        .then(response => {
+            if(response.ok) return response.json();
+            throw new Error('Request failed.');
+        })
+        .then(res_data => {
+            // console.log(data);
+            search_result_items = '';
+            // assign_members_list
+            let members = res_data;
+            Object.values(members).forEach(member => {
+                let member_str = JSON.stringify(member);
+                let insert_row_string = `<a onClick='select_member(${member_str})' href='#'>${member.name}</a>`;
+                search_result_items += insert_row_string;
+            });
+            search_members_results.innerHTML = search_result_items;
+        })
+        .catch(error => {
+            console.error(error);
+        })
+    }
+    else {
+        search_members_results.innerHTML = "";
+    }
+}
+
+function select_member(selected_member) {
+    document.getElementById("search_members_input").value = selected_member.name;
+    search_members_results.innerHTML = "";
+    document.getElementById("karma_points").value = selected_member.karma;
+    // assign_teams_list = document.getElementById('assign_teams').children[2];
+    let assigned_teams = new Set(selected_member.teams);
+    all_teams_li = document.getElementById('assign_teams').children[2].children;
+    Object.values(all_teams_li).forEach(team_li => {
+        let team_name = team_li.children[1].innerHTML; 
+        if(assigned_teams.has(team_name)) {
+            team_li.children[0].checked = true;
+        }
+    });
 }
 
 $('#alert_div').on('close.bs.alert', function () {

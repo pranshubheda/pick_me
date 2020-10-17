@@ -135,6 +135,46 @@ function setup_routes() {
             console.log(err);
         });
     });
+
+    app.get('/search_members/:keyword', (req, res) => {
+        members.search(req.params.keyword).then( (docs) => {
+            data = docs
+            res.send(data);
+        })
+        .catch( (err) => {
+            console.log(err);
+        });
+    });
+
+    app.get('/search_teams/:keyword', (req, res) => {
+        teams.search(req.params.keyword).then( (docs) => {
+            data = docs
+            res.send(data);
+        })
+        .catch( (err) => {
+            console.log(err);
+        });
+    });
+
+    app.get('/get_member/:member_name', (req, res) => {
+        members.check_if_exists(req.params.member_name).then( (members) => {
+            data = members
+            res.send(data);
+        })
+        .catch( (err) => {
+            console.log(err);
+        });
+    });
+
+    app.get('/get_team/:team_name', (req, res) => {
+        teams.check_if_exists(req.params.team_name).then( (teams) => {
+            data = teams
+            res.send(data);
+        })
+        .catch( (err) => {
+            console.log(err);
+        });
+    });
 }
 
 initialize_server();

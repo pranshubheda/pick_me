@@ -137,3 +137,34 @@ function insert_member(new_member) {
         });
     });
 }
+
+exports.search = function (keyword) {
+    return new Promise((resolve, reject) => {
+        let members_collection = db.get_members_collection();
+        search_text = ['.*',keyword,'.*'].join('');
+        let query = { 
+            'name': { '$regex': search_text, $options: 'i' }
+        };
+        members_collection.find(query).toArray( function(err, members) {        
+            if (err) {
+                return reject(err)
+            }
+            return resolve(members)
+        }); 
+    });
+}
+
+exports.update = function (member) {
+    return new Promise((resolve, reject) => {
+        let query = { name: member.name };
+        let new_value = { $set: { karma : member.karma, teams: member.teams } };
+        let members_collection = db.get_members_collection();
+        members_collection.updateOne( query, new_value
+        , function(err, res) {        
+            if (err) {
+                return reject(err)
+            }
+            return resolve(res)
+        }); 
+    });
+}

@@ -70,3 +70,19 @@ exports.find_all = function () {
         }); 
     });
 }
+
+exports.search = function (keyword) {
+    return new Promise((resolve, reject) => {
+        let teams_collection = db.get_teams_collection();
+        search_text = ['.*',keyword,'.*'].join('');
+        let query = { 
+            'name': { '$regex': search_text, $options: 'i' }
+        };
+        teams_collection.find(query).toArray( function(err, members) {        
+            if (err) {
+                return reject(err)
+            }
+            return resolve(members)
+        }); 
+    });
+}
