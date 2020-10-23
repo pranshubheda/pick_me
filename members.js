@@ -89,6 +89,7 @@ exports.add_member = function (member) {
             this.find_max_id().then(max_id => {
                 let new_member = member;
                 new_member._id = max_id + 1;
+                new_member.karma = parseInt(member.karma);
                 insert_member(new_member).then(res => {
                     return resolve(res);                        
                 }).catch (err => {
@@ -160,7 +161,7 @@ exports.update = function (member) {
             let member_exists = members.length > 0 ? true : false;
             if (member_exists) {
                 let query = { name: member.name };
-                let new_value = { $set: { karma : member.karma, teams: member.teams } };
+                let new_value = { $set: { karma : parseInt(member.karma), teams: member.teams } };
                 let members_collection = db.get_members_collection();
                 members_collection.updateOne( query, new_value
                 , function(err, res) {        

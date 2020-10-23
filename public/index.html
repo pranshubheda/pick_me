@@ -13,7 +13,14 @@
 	<body onload='init()'>
 		<div class='container'>
 			<div class="row">
-			<h1 class="display-2">Pick Me</h1>
+			<div class="heading">
+				<h1 class="pick_me_header">Pick Me</h1>
+				<h3 class="global_selected_team" id="global_selected_team"></h3>
+			</div>
+			<div id="myDropdown" class="dropdown-content hidden_css">
+				<div id="get_teams_result">
+				</div>
+			</div>
 			<div id='test'></div>
 			<div id='member_data'>
 				<table class='table table-bordered'>
@@ -63,7 +70,6 @@
 										<label for="assign_team">Assign Team</label>
 										<span name="assign_team" class="anchor assign_teams_list">Click to view teams</span>
 										<ul class="items" id="assign_teams_list">
-										  <li><input type="checkbox" class="team_checkbox"/>Apple </li>
 										</ul>
 									</div>				  
 								</div>

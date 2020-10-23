@@ -34,3 +34,29 @@ tr:hover{
 .team_checkbox {
     margin: 5px !important;
 }
+
+.pick_me_header {
+    display: inline-block;
+}
+
+.global_selected_team {
+    display: inline-block;
+    color: grey;
+    padding-left: 10px;
+}
+
+#member_data {
+    padding-top: 10px;
+}
+
+.hidden_css {
+    display: none;
+}
+
+.hidden_css:hover {
+    display: block;
+}
+  
+.heading:hover + .hidden_css {
+    display: block;
+}

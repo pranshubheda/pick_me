@@ -2,6 +2,7 @@ let members = {};
 let picked_member_id= -1;
 let data = [];
 let svg;
+let global_selected_team = '';
 
 function finalize_pick() {
     fetch(`/finalize_pick/${picked_member_id}`)
@@ -37,7 +38,7 @@ function reinitialize() {
 }
 
 function get_members() {
-    fetch('/get_members/IIW')
+    fetch(`/get_members/${global_selected_team.name}`)
     .then(response => {
         if(response.ok) return response.json();
         throw new Error('Request failed.');
@@ -302,6 +303,7 @@ function add_team() {
     .then(response_text => {
         show_success_form_alert(response_text);
         get_members();
+        get_all_teams();
     })
     .catch( error_text => {
         console.log(error_text.message);
@@ -350,6 +352,16 @@ function get_all_teams() {
             select_teams_drop_down_table += insert_row_string;
         });
         assign_teams_list.innerHTML = select_teams_drop_down_table;
+
+        let get_teams_result = document.getElementById('get_teams_result');
+        let get_teams_result_items = '';
+        Object.values(teams).forEach(team => {
+            let team_str = JSON.stringify(team);
+            let insert_row_string = `<a onClick='set_selected_team(${team_str})' href='#' class="team" href="#">${team.name}</a>`;
+            get_teams_result_items += insert_row_string;
+        });
+        get_teams_result.innerHTML = get_teams_result_items;
+
     })
     .catch(error => {
         console.error(error);
@@ -357,8 +369,8 @@ function get_all_teams() {
 }
 
 function init() {
-    get_members();
     get_all_teams();
+    set_selected_team({_id: 1, name: 'IIW'});
 }
 
 function search_teams() {
@@ -441,6 +453,12 @@ function select_member(selected_member) {
 function select_team(selected_team) {
     document.getElementById("search_teams_input").value = selected_team.name;
     search_teams_results.innerHTML = "";
+}
+
+function set_selected_team(_selected_team) {
+    global_selected_team = _selected_team;
+    document.getElementById('global_selected_team').innerHTML = global_selected_team.name;
+    get_members();
 }
 
 function collect_member_form_data() {
